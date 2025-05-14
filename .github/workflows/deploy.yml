@@ -25,8 +25,8 @@ jobs:
       - name: Checkout Submodel Templates source
         uses: actions/checkout@v3
         with:
-          repository: admin-shell-io/submodel-templates-antora
-          path: submodel-templates-antora
+          repository: admin-shell-io/idta-submodel-templates
+          path: idta-submodel-templates
 
       # 4. Set up Node.js and install Antora toolchain + extensions
       - name: Setup Node.js
@@ -52,7 +52,7 @@ jobs:
       # 6. Build Submodel Templates using its playbook
       - name: Build Submodel Templates site
         run: |
-          npx antora submodel-templates-antora/antora-playbook.yml --to-dir=build/site/submodel-templates-antora
+          npx antora idta-submodel-templates/antora-playbook.yml --to-dir=build/site/idta-submodel-templates
 
       # 7. Copy umbrella dashboard index
       - name: Copy Dashboard
