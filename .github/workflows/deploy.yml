@@ -42,6 +42,8 @@ jobs:
             @antora/pdf-extension@1.0.0-alpha.12 \
             @antora/asciidoc-loader@3.1.10 \
             asciidoctor-kroki
+      - name: Ensure Antora CLI is executable
+        run: chmod +x ./node_modules/.bin/antora
 
       # 5. Build AAS Specs site
       - name: Build AAS Specs
@@ -51,9 +53,9 @@ jobs:
 
       # 6. Build Submodel Templates site
       - name: Build Submodel Templates
-        working-directory: submodel-templates
+        working-directory: submodel-templates-antora
         run: |
-          npx antora antora-playbook.yml --to-dir=../build/site/submodel-templates
+          npx antora antora-playbook.yml --to-dir=../build/site/submodel-templates-antora
 
       # 7. Copy umbrella index.html into the combined site
       - name: Copy Dashboard
