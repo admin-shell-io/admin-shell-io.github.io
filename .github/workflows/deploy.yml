@@ -47,7 +47,7 @@ jobs:
       # 5. Build AAS Specs using its playbook
       - name: Build AAS Specs site
         run: |
-          npx antora aas-specs-antora/antora-playbook.yml --to-dir=build/site/aas-specs-antora
+          npx antora aas-specifications/antora-playbook.yml --to-dir=build/site/aas-specifications
 
       # 6. Build Submodel Templates using its playbook
       - name: Build Submodel Templates site
