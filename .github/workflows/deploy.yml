@@ -18,8 +18,8 @@ jobs:
       - name: Checkout AAS Specs source
         uses: actions/checkout@v3
         with:
-          repository: admin-shell-io/aas-specs-antora
-          path: aas-specs-antora
+          repository: admin-shell-io/aas-specifications
+          path: aas-specifications
 
       # 3. Checkout Submodel Templates source (main branch)
       - name: Checkout Submodel Templates source
