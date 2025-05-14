@@ -14,37 +14,47 @@ jobs:
         with:
           fetch-depth: 0
 
-      # 2. Checkout pre-built site from AAS Specs (gh-pages branch)
-      - name: Checkout AAS Specs static site
-        uses: actions/checkout@v3
-        with:
-          repository: admin-shell-io/aas-specs-antora
-          ref: gh-pages
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
-          path: aas-specs-antora
-
-      # 3. Checkout pre-built site from Submodel Templates (gh-pages branch)
-      - name: Checkout Submodel Templates static site
-        uses: actions/checkout@v3
-        with:
-          repository: admin-shell-io/submodel-templates-antora
-          ref: gh-pages
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
-          path: submodel-templates-antora
-
-      # 4. Copy both static sites into a single build directory
-      - name: Assemble combined site
+      # 2. Create redirect for AAS Specs
+      - name: Generate AAS Specs redirect
         run: |
           mkdir -p build/site/aas-specs-antora
-          cp -R aas-specs-antora/* build/site/aas-specs-antora/
+          cat > build/site/aas-specs-antora/index.html <<EOF
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta http-equiv="refresh" content="0; url=https://admin-shell-io.github.io/aas-specs-antora/index/home/index.html" />
+            <title>Redirecting to AAS Specs</title>
+          </head>
+          <body>
+            <p>Redirecting to <a href="https://admin-shell-io.github.io/aas-specs-antora/index/home/index.html">AAS Specifications Documentation</a>...</p>
+          </body>
+          </html>
+          EOF
+
+      # 3. Create redirect for Submodel Templates
+      - name: Generate Submodel Templates redirect
+        run: |
           mkdir -p build/site/submodel-templates-antora
-          cp -R submodel-templates-antora/* build/site/submodel-templates-antora/
-          # Copy umbrella dashboard
+          cat > build/site/submodel-templates-antora/index.html <<EOF
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta http-equiv="refresh" content="0; url=https://admin-shell-io.github.io/submodel-templates-antora/index/home/index.html" />
+            <title>Redirecting to Submodel Templates</title>
+          </head>
+          <body>
+            <p>Redirecting to <a href="https://admin-shell-io.github.io/submodel-templates-antora/index/home/index.html">Submodel Templates Documentation</a>...</p>
+          </body>
+          </html>
+          EOF
+
+      # 4. Assemble minimal redirect site
+        # (only redirects and dashboard)
+        run: |
+          # build/site already has redirect index.html files from steps 2 & 3
           cp index.html build/site/index.html
 
-      # 5. Deploy the combined site to GitHub Pages
+      # 5. Deploy the combined site to GitHub Pages Deploy the combined site to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
