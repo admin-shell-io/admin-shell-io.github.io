@@ -1,4 +1,4 @@
-name: Build & Deploy Docs Site
+name: Build & Deploy Combined Docs
 
 on:
   push:
@@ -9,22 +9,57 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      # 1. Checkout umbrella repo
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0       # in case you need history for edits
 
-      # 1. Initialize npm & install local dev-deps
-      - name: Set up Node.js and install Antora
+      # 2. Checkout the AAS specs meta-repo
+      - name: Checkout AAS Specs
+        uses: actions/checkout@v3
+        with:
+          repository: admin-shell-io/aas-specs-antora
+          path: aas-specs-antora
+
+      # 3. Checkout the Submodel Templates repo
+      - name: Checkout Submodel Templates
+        uses: actions/checkout@v3
+        with:
+          repository: admin-shell-io/submodel-templates-antora
+          path: submodel-templates
+
+      # 4. Set up Node.js & install Antora + extensions + loader + kroki
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'        # or whatever LTS you prefer
-      - run: |
-          npm ci                   # installs @antora/cli & @antora/site-generator-default
-      # 2. Build the site
-      - name: Build with Antora
-        run: npx antora antora-playbook.yml --to-dir=build/site
-      # 3. Deploy
+          node-version: 18
+      - name: Install Antora toolchain
+        run: npm ci
+
+      # 5. Build AAS Specs site
+      - name: Build AAS Specs
+        working-directory: aas-specs-antora
+        run: |
+          # uses the playbook *in* that repo
+          npx antora antora-playbook.yml --to-dir=../build/site/aas-specs-antora
+
+      # 6. Build Submodel Templates site
+      - name: Build Submodel Templates
+        working-directory: submodel-templates
+        run: |
+          # assumes there's a playbook at the root of submodel-templates
+          npx antora antora-playbook.yml --to-dir=../build/site/submodel-templates
+
+      # 7. Copy umbrella index.html into the combined site
+      - name: Copy Dashboard
+        run: |
+          mkdir -p build/site
+          cp index.html build/site/index.html
+
+      # 8. Deploy the entire build/site folder to Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: build/site
-  # or omit to default to gh-pages
+          publish_branch: gh-pages
