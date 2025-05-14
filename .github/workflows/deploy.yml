@@ -20,7 +20,9 @@ jobs:
         with:
           repository: admin-shell-io/aas-specs-antora
           ref: gh-pages
-          path: aas-specifications
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+          path: aas-specs-antora
 
       # 3. Checkout pre-built site from Submodel Templates (gh-pages branch)
       - name: Checkout Submodel Templates static site
@@ -28,7 +30,9 @@ jobs:
         with:
           repository: admin-shell-io/submodel-templates-antora
           ref: gh-pages
-          path: submodel-templates
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+          path: submodel-templates-antora
 
       # 4. Copy both static sites into a single build directory
       - name: Assemble combined site
