@@ -1,0 +1,29 @@
+name: Build & Deploy Docs Site
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Checkout this umbrella repo
+      - uses: actions/checkout@v3
+
+      # 2. Install Antora CLI & site generator
+      - name: Install Antora
+        run: npm install --global @antora/cli @antora/site-generator-default
+
+      # 3. Run Antora build
+      - name: Build site
+        run: npx antora antora-playbook.yml --to-dir=build/site
+
+      # 4. Deploy to GitHub Pages
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/site
+          publish_branch: gh-pages  # or omit to default to gh-pages

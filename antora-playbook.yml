@@ -1,0 +1,42 @@
+site:
+  title: Industrial Digital Twin Docs
+  url: https://industrialdigitaltwin.io
+  start_page: index::index.adoc  # if using AsciiDoc for your homepage
+
+content:
+  sources:
+    # 1) This umbrella repo (for your dashboard/index.adoc)
+    - url: .
+      branches: [ HEAD ]
+      start_path: .
+    # 2) AAS Specs module
+    - url: https://github.com/admin-shell-io/aas-specs-antora
+      branches: [ main ]
+      start_path: .
+    # 3) Submodel Templates module
+    - url: https://github.com/admin-shell-io/submodel-templates-antora
+      branches: [ main ]
+      start_path: published/*/*/*/docs
+
+ui:
+  bundle:
+    url: https://github.com/admin-shell-io/aas-specs-antora-ui/releases/latest/download/ui-bundle.zip
+    snapshot: true
+  supplemental_files:
+    - path: .nojekyll    # preserve nested folders on GitHub Pages
+
+runtime:
+  fetch: true
+
+antora:
+  extensions:
+    - '@antora/lunr-extension'
+    - '@antora/pdf-extension'
+
+asciidoc:
+  extensions:
+    - asciidoctor-kroki
+  attributes:
+    xrefstyle: short
+    kroki-server-url: https://kroki.io
+    kroki-fetch-diagram: true
