@@ -14,56 +14,33 @@ jobs:
         with:
           fetch-depth: 0
 
-      # 2. Checkout the AAS specs meta-repo
-      - name: Checkout AAS Specs
+      # 2. Checkout pre-built site from AAS Specs (gh-pages branch)
+      - name: Checkout AAS Specs static site
         uses: actions/checkout@v3
         with:
           repository: admin-shell-io/aas-specs-antora
-          path: aas-specs-antora
+          ref: gh-pages
+          path: aas-specifications
 
-      # 3. Checkout the Submodel Templates repo
-      - name: Checkout Submodel Templates
+      # 3. Checkout pre-built site from Submodel Templates (gh-pages branch)
+      - name: Checkout Submodel Templates static site
         uses: actions/checkout@v3
         with:
           repository: admin-shell-io/submodel-templates-antora
-          path: submodel-templates-antora
+          ref: gh-pages
+          path: submodel-templates
 
-      # 4. Set up Node.js & install Antora + extensions + loader + kroki
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - name: Install Antora toolchain
+      # 4. Copy both static sites into a single build directory
+      - name: Assemble combined site
         run: |
-          npm install --no-audit --prefer-offline \
-            @antora/cli \
-            @antora/site-generator-default \
-            @antora/lunr-extension@1.0.0-alpha.10 \
-            @antora/pdf-extension@1.0.0-alpha.12 \
-            @antora/asciidoc-loader@3.1.10 \
-            asciidoctor-kroki
-      - name: Ensure Antora CLI is executable
-        run: chmod +x ./node_modules/.bin/antora
-
-      # 5. Build AAS Specs site
-      - name: Build AAS Specs
-        working-directory: aas-specs-antora
-        run: |
-          npx antora antora-playbook.yml --to-dir=../build/site/aas-specs-antora
-
-      # 6. Build Submodel Templates site
-      - name: Build Submodel Templates
-        working-directory: submodel-templates-antora
-        run: |
-          npx antora antora-playbook.yml --to-dir=../build/site/submodel-templates-antora
-
-      # 7. Copy umbrella index.html into the combined site
-      - name: Copy Dashboard
-        run: |
-          mkdir -p build/site
+          mkdir -p build/site/aas-specs-antora
+          cp -R aas-specs-antora/* build/site/aas-specs-antora/
+          mkdir -p build/site/submodel-templates-antora
+          cp -R submodel-templates-antora/* build/site/submodel-templates-antora/
+          # Copy umbrella dashboard
           cp index.html build/site/index.html
 
-      # 8. Deploy the entire build/site folder to Pages
+      # 5. Deploy the combined site to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
