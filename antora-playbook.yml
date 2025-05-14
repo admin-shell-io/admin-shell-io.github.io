@@ -10,11 +10,11 @@ content:
       branches: [ HEAD ]
       start_path: .
     # 2) AAS Specs module
-    - url: https://github.com/admin-shell-io/aas-specs-antora
+    - url: https://github.com/admin-shell-io/aas-specifications
       branches: [ main ]
       start_path: .
     # 3) Submodel Templates module
-    - url: https://github.com/admin-shell-io/submodel-templates-antora
+    - url: https://github.com/admin-shell-io/idta-submodel-templates
       branches: [ main ]
       start_path: published/*/*/*/docs
 
@@ -34,9 +34,11 @@ antora:
     - '@antora/pdf-extension'
 
 asciidoc:
+  sourcemap: true
   extensions:
     - asciidoctor-kroki
   attributes:
     xrefstyle: short
-    kroki-server-url: https://kroki.io
+    kroki-server-url: http://localhost:8000
     kroki-fetch-diagram: true
+    kroki-plantuml-include: https://raw.githubusercontent.com/admin-shell-io/aas-specifications/refs/heads/main/plantuml/puml-theme-idta.puml
