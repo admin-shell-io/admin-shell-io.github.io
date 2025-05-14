@@ -14,47 +14,53 @@ jobs:
         with:
           fetch-depth: 0
 
-      # 2. Create redirect for AAS Specs
-      - name: Generate AAS Specs redirect
-        run: |
-          mkdir -p build/site/aas-specs-antora
-          cat > build/site/aas-specs-antora/index.html <<EOF
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <meta http-equiv="refresh" content="0; url=https://admin-shell-io.github.io/aas-specs-antora/index/home/index.html" />
-            <title>Redirecting to AAS Specs</title>
-          </head>
-          <body>
-            <p>Redirecting to <a href="https://admin-shell-io.github.io/aas-specs-antora/index/home/index.html">AAS Specifications Documentation</a>...</p>
-          </body>
-          </html>
-          EOF
+      # 2. Checkout AAS Specs source (main branch)
+      - name: Checkout AAS Specs source
+        uses: actions/checkout@v3
+        with:
+          repository: admin-shell-io/aas-specs-antora
+          path: aas-specs-antora
 
-      # 3. Create redirect for Submodel Templates
-      - name: Generate Submodel Templates redirect
-        run: |
-          mkdir -p build/site/submodel-templates-antora
-          cat > build/site/submodel-templates-antora/index.html <<EOF
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <meta http-equiv="refresh" content="0; url=https://admin-shell-io.github.io/submodel-templates-antora/index/home/index.html" />
-            <title>Redirecting to Submodel Templates</title>
-          </head>
-          <body>
-            <p>Redirecting to <a href="https://admin-shell-io.github.io/submodel-templates-antora/index/home/index.html">Submodel Templates Documentation</a>...</p>
-          </body>
-          </html>
-          EOF
+      # 3. Checkout Submodel Templates source (main branch)
+      - name: Checkout Submodel Templates source
+        uses: actions/checkout@v3
+        with:
+          repository: admin-shell-io/submodel-templates-antora
+          path: submodel-templates-antora
 
-      # 4. Assemble minimal redirect site
-        # (only redirects and dashboard)
+      # 4. Set up Node.js and install Antora toolchain + extensions
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install Antora CLI and extensions
         run: |
-          # build/site already has redirect index.html files from steps 2 & 3
+          npm install --no-audit --prefer-offline \
+            @antora/cli \
+            @antora/site-generator-default \
+            @antora/lunr-extension@1.0.0-alpha.10 \
+            @antora/pdf-extension@1.0.0-alpha.12 \
+            @antora/asciidoc-loader@3.1.10 \
+            asciidoctor-kroki
+          chmod +x ./node_modules/.bin/antora
+
+      # 5. Build AAS Specs using its playbook
+      - name: Build AAS Specs site
+        run: |
+          npx antora aas-specs-antora/antora-playbook.yml --to-dir=build/site/aas-specs-antora
+
+      # 6. Build Submodel Templates using its playbook
+      - name: Build Submodel Templates site
+        run: |
+          npx antora submodel-templates-antora/antora-playbook.yml --to-dir=build/site/submodel-templates-antora
+
+      # 7. Copy umbrella dashboard index
+      - name: Copy Dashboard
+        run: |
+          mkdir -p build/site
           cp index.html build/site/index.html
 
-      # 5. Deploy the combined site to GitHub Pages Deploy the combined site to GitHub Pages
+      # 8. Deploy combined site to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
