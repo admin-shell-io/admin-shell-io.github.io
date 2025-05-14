@@ -12,7 +12,7 @@ jobs:
       # 1. Checkout umbrella repo
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0       # in case you need history for edits
+          fetch-depth: 0
 
       # 2. Checkout the AAS specs meta-repo
       - name: Checkout AAS Specs
@@ -34,20 +34,25 @@ jobs:
         with:
           node-version: 18
       - name: Install Antora toolchain
-        run: npm ci
+        run: |
+          npm install --no-audit --prefer-offline \
+            @antora/cli \
+            @antora/site-generator-default \
+            @antora/lunr-extension@1.0.0-alpha.10 \
+            @antora/pdf-extension@1.0.0-alpha.12 \
+            @antora/asciidoc-loader@3.1.10 \
+            asciidoctor-kroki
 
       # 5. Build AAS Specs site
       - name: Build AAS Specs
         working-directory: aas-specs-antora
         run: |
-          # uses the playbook *in* that repo
           npx antora antora-playbook.yml --to-dir=../build/site/aas-specs-antora
 
       # 6. Build Submodel Templates site
       - name: Build Submodel Templates
         working-directory: submodel-templates
         run: |
-          # assumes there's a playbook at the root of submodel-templates
           npx antora antora-playbook.yml --to-dir=../build/site/submodel-templates
 
       # 7. Copy umbrella index.html into the combined site
