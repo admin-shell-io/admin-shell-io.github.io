@@ -5,6 +5,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -33,37 +36,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-      - name: Install Antora CLI and extensions
-        run: |
-          npm install --no-audit --prefer-offline \
-            @antora/cli \
-            @antora/site-generator-default \
-            @antora/lunr-extension@1.0.0-alpha.10 \
-            @antora/pdf-extension@1.0.0-alpha.12 \
-            @antora/asciidoc-loader@3.1.10 \
-            asciidoctor-kroki
-          chmod +x ./node_modules/.bin/antora
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
 
-      # 5. Build AAS Specs using its playbook
-      - name: Build AAS Specs site
+      # 5. Build the site using the umbrella playbook
+      - name: Build site
         run: |
-          npx antora aas-specifications/antora-playbook.yml --to-dir=build/site/aas-specifications
+          npx antora antora-playbook.yml --to-dir=build/site
 
-      # 6. Build Submodel Templates using its playbook
-      - name: Build Submodel Templates site
-        run: |
-          npx antora idta-submodel-templates/antora-playbook.yml --to-dir=build/site/idta-submodel-templates
-
-      # 7. Copy umbrella dashboard index
-      - name: Copy Dashboard
-        run: |
-          mkdir -p build/site
-          cp index.html build/site/index.html
-
-      # 8. Deploy combined site to GitHub Pages
+      # 6. Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/site
-          publish_branch: gh-pages
+          folder: build/site
+          branch: gh-pages
