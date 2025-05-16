@@ -24,6 +24,7 @@ jobs:
           mkdir -p build/site
           cp -v index.html build/site/
           cp -v .nojekyll build/site/
+          cp -v CNAME build/site/
           ls -l build/site/
 
       - name: Deploy to GitHub Pages
