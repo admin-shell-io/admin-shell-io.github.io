@@ -24,7 +24,7 @@ jobs:
 
       - name: Create updated index.html
         run: |
-          cat > build/site/index.html << 'EOF'
+          cat > build/site/index.html << 'HTMLEND'
 <!DOCTYPE html>
 <html>
   <head>
@@ -99,7 +99,7 @@ jobs:
     </div>
   </body>
 </html>
-EOF
+HTMLEND
           echo "Created new index.html:"
           cat build/site/index.html
 
