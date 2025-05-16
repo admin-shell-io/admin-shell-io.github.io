@@ -21,30 +21,43 @@ jobs:
 
       - name: Copy umbrella content
         run: |
-          mkdir -p build/site
           cp -v index.html build/site/
           cp -v .nojekyll build/site/
           cp -v CNAME build/site/
-          ls -l build/site/
+          ls -la build/site/
+
+      - name: Fix index.html URLs
+        run: |
+          # Update relative URLs to absolute ones
+          sed -i 's|href="/aas-specifications/|href="./aas-specifications/|g' build/site/index.html
+          sed -i 's|href="/idta-submodel-templates/|href="./idta-submodel-templates/|g' build/site/index.html
+          echo "Modified index.html content:"
+          cat build/site/index.html
 
       - name: Download AAS Specifications site
         run: |
           mkdir -p build/site/aas-specifications
-          wget -q -r -nH --cut-dirs=1 --no-parent --reject="index.html*" https://admin-shell-io.github.io/aas-specifications/
+          wget -q -r -nH --cut-dirs=1 --no-parent --reject="index.html*" -P aas-specifications/ https://admin-shell-io.github.io/aas-specifications/
           cp -r aas-specifications/* build/site/aas-specifications/ || true
+          echo "Contents of aas-specifications directory:"
+          ls -la aas-specifications/ || echo "No files found"
 
       - name: Download Submodel Templates site
         run: |
           mkdir -p build/site/idta-submodel-templates
-          wget -q -r -nH --cut-dirs=1 --no-parent --reject="index.html*" https://admin-shell-io.github.io/idta-submodel-templates/
+          wget -q -r -nH --cut-dirs=1 --no-parent --reject="index.html*" -P idta-submodel-templates/ https://admin-shell-io.github.io/idta-submodel-templates/
           cp -r idta-submodel-templates/* build/site/idta-submodel-templates/ || true
+          echo "Contents of idta-submodel-templates directory:"
+          ls -la idta-submodel-templates/ || echo "No files found"
 
       - name: List deployed files
         run: |
-          echo "Contents of build/site:"
-          ls -lR build/site/
-          echo "Contents of build/site/index.html:"
-          cat build/site/index.html
+          echo "Contents of build/site root:"
+          ls -la build/site/
+          echo "Contents of aas-specifications directory:"
+          ls -la build/site/aas-specifications/ || echo "Directory empty or not found"
+          echo "Contents of idta-submodel-templates directory:"
+          ls -la build/site/idta-submodel-templates/ || echo "Directory empty or not found"
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
