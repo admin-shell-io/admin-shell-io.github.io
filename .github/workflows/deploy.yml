@@ -1,33 +1,54 @@
-contents: write
+name: Deploy Combined Docs
 
+# Define the events that trigger this workflow
+on:
+  # Run on push to the main branch
+  push:
+    branches:
+      - main
+  # Allow manual triggering from the GitHub UI
+  workflow_dispatch:
+
+# Set permissions needed for deployment
+permissions:
+  contents: write
+
+# Define the jobs to run
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      # Check out the repository code
+      - name: Checkout code
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Create site directory and clear cache
+      # Create the site directory
+      - name: Create site directory
         run: |
           mkdir -p build/site
           rm -rf aas-specifications idta-submodel-templates
 
-      - name: Copy existing index.html
+      # Copy and modify the index.html file
+      - name: Copy and update index.html
         run: |
           cp index.html build/site/index.html
           sed -i 's|<h1>IDTA AAS Specification Documentation</h1>|<h1>Industrial Digital Twin Documentation</h1>|g' build/site/index.html
           sed -i 's|<h2 style="color:red;">THIS IS A TEST - SHOULD BE VISIBLE</h2>|<h2 style="color:red;">THIS IS A TEST - UPDATED VERSION - DEPLOYED AT '"$(date)"'</h2>|g' build/site/index.html
           sed -i 's|href="/aas-specifications/|href="./aas-specifications/|g' build/site/index.html
           sed -i 's|href="/idta-submodel-templates/|href="./idta-submodel-templates/|g' build/site/index.html
+          echo "Updated index.html content:"
           cat build/site/index.html
 
-      - name: Copy other required files
+      # Create necessary files for GitHub Pages
+      - name: Create GitHub Pages files
         run: |
           touch build/site/.nojekyll
           echo "industrialdigitaltwin.io" > build/site/CNAME
           ls -la build/site/
 
+      # Download AAS Specifications
       - name: Download AAS Specifications site
         run: |
           mkdir -p build/site/aas-specifications
@@ -36,6 +57,7 @@ jobs:
           echo "Contents of aas-specifications directory:"
           ls -la aas-specifications/ || echo "No files found"
 
+      # Download Submodel Templates
       - name: Download Submodel Templates site
         run: |
           mkdir -p build/site/idta-submodel-templates
@@ -44,6 +66,7 @@ jobs:
           echo "Contents of idta-submodel-templates directory:"
           ls -la idta-submodel-templates/ || echo "No files found"
 
+      # List all deployed files for debugging
       - name: List deployed files
         run: |
           echo "Contents of build/site root:"
@@ -53,6 +76,7 @@ jobs:
           echo "Contents of idta-submodel-templates directory:"
           ls -la build/site/idta-submodel-templates/ || echo "Directory empty or not found"
 
+      # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
