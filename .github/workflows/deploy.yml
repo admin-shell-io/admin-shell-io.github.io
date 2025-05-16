@@ -21,6 +21,7 @@ jobs:
 
       - name: Copy umbrella content
         run: |
+          mkdir -p build/site
           cp -r index.html build/site/
           cp -r .nojekyll build/site/
 
