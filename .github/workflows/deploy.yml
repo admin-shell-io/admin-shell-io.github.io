@@ -1,4 +1,4 @@
-name: Build & Deploy Combined Docs
+name: Deploy Combined Docs
 
 on:
   push:
@@ -9,44 +9,21 @@ permissions:
   contents: write
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      # 1. Checkout umbrella repo
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      # 2. Checkout AAS Specs source (main branch)
-      - name: Checkout AAS Specs source
-        uses: actions/checkout@v3
-        with:
-          repository: admin-shell-io/aas-specifications
-          path: aas-specifications
+      - name: Create site directory
+        run: mkdir -p build/site
 
-      # 3. Checkout Submodel Templates source (main branch)
-      - name: Checkout Submodel Templates source
-        uses: actions/checkout@v3
-        with:
-          repository: admin-shell-io/idta-submodel-templates
-          path: idta-submodel-templates
-
-      # 4. Set up Node.js and install Antora toolchain + extensions
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'npm'
-          
-      - name: Install dependencies
-        run: npm ci
-
-      # 5. Build the site using the umbrella playbook
-      - name: Build site
+      - name: Copy umbrella content
         run: |
-          npx antora antora-playbook.yml --to-dir=build/site
+          cp -r index.html build/site/
+          cp -r .nojekyll build/site/
 
-      # 6. Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:

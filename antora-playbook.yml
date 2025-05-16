@@ -1,29 +1,26 @@
 site:
   title: Industrial Digital Twin Docs
   url: https://industrialdigitaltwin.io
-  start_page: index::index.adoc  # if using AsciiDoc for your homepage
+  start_page: index::index.adoc
 
 content:
   sources:
-    # 1) This umbrella repo (for your dashboard/index.adoc)
     - url: .
       branches: [ HEAD ]
       start_path: .
-    # 2) AAS Specs module
-    - url: https://github.com/admin-shell-io/aas-specifications
-      branches: [ main ]
+    - url: https://admin-shell-io.github.io/aas-specifications
+      branches: [ HEAD ]
       start_path: .
-    # 3) Submodel Templates module
-    - url: https://github.com/admin-shell-io/idta-submodel-templates
-      branches: [ main ]
-      start_path: published/*/*/*/docs
+    - url: https://admin-shell-io.github.io/idta-submodel-templates
+      branches: [ HEAD ]
+      start_path: .
 
 ui:
   bundle:
     url: https://github.com/admin-shell-io/aas-specs-antora-ui/releases/latest/download/ui-bundle.zip
     snapshot: true
   supplemental_files:
-    - path: .nojekyll    # preserve nested folders on GitHub Pages
+    - path: .nojekyll
 
 runtime:
   fetch: true
