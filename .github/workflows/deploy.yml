@@ -39,8 +39,17 @@ jobs:
           wget -q -r -nH --cut-dirs=1 --no-parent --reject="index.html*" https://admin-shell-io.github.io/idta-submodel-templates/
           cp -r idta-submodel-templates/* build/site/idta-submodel-templates/ || true
 
+      - name: List deployed files
+        run: |
+          echo "Contents of build/site:"
+          ls -lR build/site/
+          echo "Contents of build/site/index.html:"
+          cat build/site/index.html
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: build/site
           branch: gh-pages
+          clean: true
+          force: true
