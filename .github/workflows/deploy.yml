@@ -22,8 +22,9 @@ jobs:
       - name: Copy umbrella content
         run: |
           mkdir -p build/site
-          cp -r index.html build/site/
-          cp -r .nojekyll build/site/
+          cp -v index.html build/site/
+          cp -v .nojekyll build/site/
+          ls -l build/site/
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
