@@ -27,6 +27,18 @@ jobs:
           cp -v CNAME build/site/
           ls -l build/site/
 
+      - name: Download AAS Specifications site
+        run: |
+          mkdir -p build/site/aas-specifications
+          wget -q -r -nH --cut-dirs=1 --no-parent --reject="index.html*" https://admin-shell-io.github.io/aas-specifications/
+          cp -r aas-specifications/* build/site/aas-specifications/ || true
+
+      - name: Download Submodel Templates site
+        run: |
+          mkdir -p build/site/idta-submodel-templates
+          wget -q -r -nH --cut-dirs=1 --no-parent --reject="index.html*" https://admin-shell-io.github.io/idta-submodel-templates/
+          cp -r idta-submodel-templates/* build/site/idta-submodel-templates/ || true
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
