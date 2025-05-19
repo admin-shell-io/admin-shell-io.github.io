@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Industrial Digital Twin Documentation</title>
+    <link rel="icon" type="image/x-icon" href="https://industrialdigitaltwin.io/favicon.ico">
+    <style>
+        :root {
+            --primary-color: #0066cc;
+            --secondary-color: #004999;
+            --text-color: #333;
+            --background-color: #f5f5f5;
+            --header-height: 60px;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--primary-color);
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 1rem;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        main {
+            margin-top: calc(var(--header-height) + 2rem);
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: #666;
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .card p {
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            text-align: center;
+        }
+
+        .button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        footer {
+            background-color: white;
+            padding: 2rem 0;
+            margin-top: 4rem;
+            text-align: center;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                height: auto;
+                padding: 1rem;
+            }
+
+            .nav-links {
+                margin-top: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            main {
+                margin-top: calc(var(--header-height) + 4rem);
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo">
+                <img src="https://industrialdigitaltwin.io/logo.png" alt="IDTA Logo">
+                <h1>Industrial Digital Twin</h1>
+            </a>
+            <nav class="nav-links">
+                <a href="https://industrialdigitaltwin.io/about">About</a>
+                <a href="https://industrialdigitaltwin.io/contact">Contact</a>
+                <a href="https://github.com/admin-shell-io" target="_blank">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h2>Welcome to Industrial Digital Twin Documentation</h2>
+            <p>Access comprehensive documentation for Asset Administration Shell specifications and standardized submodel templates.</p>
+        </section>
+
+        <div class="card-container">
+            <div class="card">
+                <h2>AAS Specifications</h2>
+                <p>Comprehensive documentation for the Asset Administration Shell specifications, including metamodel, API specifications, and more.</p>
+                <a href="https://admin-shell-io.github.io/aas-specifications/" class="button">View Documentation</a>
+            </div>
+
+            <div class="card">
+                <h2>Submodel Templates</h2>
+                <p>Standardized submodel templates for implementing the Asset Administration Shell in various industrial contexts.</p>
+                <a href="https://admin-shell-io.github.io/idta-submodel-templates/" class="button">View Documentation</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2024 Industrial Digital Twin Association (IDTA)</p>
+            <p>
+                <a href="https://industrialdigitaltwin.io/privacy">Privacy Policy</a> |
+                <a href="https://industrialdigitaltwin.io/terms">Terms of Use</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html> 
