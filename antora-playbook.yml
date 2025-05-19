@@ -8,12 +8,12 @@ content:
     - url: .
       branches: [ HEAD ]
       start_path: .
-    - url: https://admin-shell-io.github.io/aas-specifications
-      branches: [ HEAD ]
+    - url: https://github.com/admin-shell-io/aas-specifications.git
+      branches: [ main ]
       start_path: .
-    - url: https://admin-shell-io.github.io/idta-submodel-templates
-      branches: [ HEAD ]
-      start_path: .
+    - url: https://github.com/admin-shell-io/idta-submodel-templates.git
+      branches: [ main ]
+      start_path: published/*/*/*/docs
 
 ui:
   bundle:
