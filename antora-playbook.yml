@@ -19,7 +19,7 @@ content:
           start_page: index.adoc
     - url: https://github.com/admin-shell-io/idta-submodel-templates.git
       branches: [ main ]
-      start_path: docs
+      start_path: modules/ROOT/pages
       components:
         - name: submodel-templates
           start_page: index.adoc
