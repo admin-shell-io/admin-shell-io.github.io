@@ -1,29 +1,32 @@
-name: Build & Deploy Docs Site
+name: Deploy Combined Docs
 
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      # 1. Checkout this umbrella repo
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      # 2. Install Antora CLI & site generator
-      - name: Install Antora
-        run: npm install --global @antora/cli @antora/site-generator-default
+      - name: Install Antora CLI and extensions
+        run: |
+          npm install @antora/cli @antora/site-generator-default @antora/lunr-extension @antora/pdf-extension asciidoctor-kroki
 
-      # 3. Run Antora build
-      - name: Build site
+      - name: Build Antora site
         run: npx antora antora-playbook.yml --to-dir=build/site
 
-      # 4. Deploy to GitHub Pages
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/site
-          publish_branch: gh-pages  # or omit to default to gh-pages
+          folder: build/site
+          branch: gh-pages
+          clean: true
+          force: true
