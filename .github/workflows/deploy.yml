@@ -1,23 +1,26 @@
-name: Deploy to GitHub Pages
+name: Build & Deploy Docs Site
 
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v3
 
-      - name: Deploy to GitHub Pages
+      - name: Install Antora
+        run: npm install --global @antora/cli @antora/site-generator-default
+
+      - name: Build site
+        run: npx antora antora-playbook.yml --to-dir=build/site
+
+      - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
-          publish_branch: gh-pages
-          commit_message: "docs: update documentation" 
+          publish_dir: build/site
+          publish_branch: gh-pages  
