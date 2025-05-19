@@ -8,12 +8,21 @@ content:
     - url: .
       branches: [ HEAD ]
       start_path: .
-    - url: https://github.com/admin-shell-io/aas-specifications.git
-      branches: [ main ]
+      components:
+        - name: home
+          start_page: index.adoc
+    - url: https://admin-shell-io.github.io/aas-specifications/
+      branches: [ HEAD ]
       start_path: .
-    - url: https://github.com/admin-shell-io/idta-submodel-templates.git
-      branches: [ main ]
-      
+      components:
+        - name: aas-specifications
+          start_page: index.html
+    - url: https://admin-shell-io.github.io/idta-submodel-templates/
+      branches: [ HEAD ]
+      start_path: .
+      components:
+        - name: submodel-templates
+          start_page: index.html
 
 ui:
   bundle:
@@ -22,20 +31,6 @@ ui:
   supplemental_files:
     - path: .nojekyll
 
-runtime:
-  fetch: true
-
-antora:
-  extensions:
-    - '@antora/lunr-extension'
-    - '@antora/pdf-extension'
-
 asciidoc:
-  sourcemap: true
-  extensions:
-    - asciidoctor-kroki
   attributes:
-    xrefstyle: short
-    kroki-server-url: http://localhost:8000
-    kroki-fetch-diagram: true
-    kroki-plantuml-include: https://raw.githubusercontent.com/admin-shell-io/aas-specifications/refs/heads/main/plantuml/puml-theme-idta.puml
+    xrefstyle: short 

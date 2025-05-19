@@ -1,0 +1,15 @@
+= Industrial Digital Twin Documentation
+:page-layout: home
+:!sectids:
+
+Welcome to the Industrial Digital Twin documentation portal. This site combines documentation from multiple sources to provide a comprehensive resource for the Industrial Digital Twin Association (IDTA).
+
+== Documentation Components
+
+* xref:aas-specifications:index.adoc[AAS Specifications] - The Asset Administration Shell specifications
+* xref:submodel-templates:index.adoc[Submodel Templates] - Standardized submodel templates
+
+== Quick Links
+
+* https://industrialdigitaltwin.io/aas-specifications/[AAS Specifications]
+* https://industrialdigitaltwin.io/submodel-templates/[Submodel Templates] 
