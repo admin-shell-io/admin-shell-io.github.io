@@ -1,0 +1,39 @@
+site:
+  title: Industrial Digital Twin Documentation
+  url: https://industrialdigitaltwin.io
+  start_page: home::index.adoc
+
+content:
+  sources:
+    - url: .
+      branches: [ HEAD ]
+      start_path: .
+      components:
+        - name: home
+          start_page: index.adoc
+    - url: https://github.com/admin-shell-io/aas-specifications.git
+      branches: [ main ]
+      start_path: modules/ROOT/pages
+      components:
+        - name: aas-specifications
+          start_page: index.adoc
+    - url: https://github.com/admin-shell-io/idta-submodel-templates.git
+      branches: [ main ]
+      start_path: docs
+      components:
+        - name: submodel-templates
+          start_page: index.adoc
+
+ui:
+  bundle:
+    url: https://github.com/admin-shell-io/aas-specs-antora-ui/releases/latest/download/ui-bundle.zip
+    snapshot: true
+  supplemental_files:
+    - path: .nojekyll
+    - path: CNAME
+
+asciidoc:
+  attributes:
+    xrefstyle: short
+    page-layout: home
+    sectids: true 
