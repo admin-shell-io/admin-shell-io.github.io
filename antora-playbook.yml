@@ -13,7 +13,7 @@ content:
       start_path: .
     - url: https://github.com/admin-shell-io/idta-submodel-templates.git
       branches: [ main ]
-      start_path: published/*/*/*/docs
+      
 
 ui:
   bundle:
