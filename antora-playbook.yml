@@ -11,18 +11,18 @@ content:
       components:
         - name: home
           start_page: index.adoc
-    - url: https://admin-shell-io.github.io/aas-specifications/
-      branches: [ HEAD ]
-      start_path: .
+    - url: https://github.com/admin-shell-io/aas-specifications.git
+      branches: [ main ]
+      start_path: modules/ROOT/pages
       components:
         - name: aas-specifications
-          start_page: index.html
-    - url: https://admin-shell-io.github.io/idta-submodel-templates/
-      branches: [ HEAD ]
-      start_path: .
+          start_page: index.adoc
+    - url: https://github.com/admin-shell-io/idta-submodel-templates.git
+      branches: [ main ]
+      start_path: docs
       components:
         - name: submodel-templates
-          start_page: index.html
+          start_page: index.adoc
 
 ui:
   bundle:
