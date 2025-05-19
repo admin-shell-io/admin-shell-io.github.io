@@ -1,89 +1,29 @@
-name: Deploy Combined Docs
+name: Build & Deploy Docs Site
 
-# Define the events that trigger this workflow
 on:
-  # Run on push to the main branch
   push:
-    branches:
-      - main
-  # Allow manual triggering from the GitHub UI
+    branches: [ main ]
   workflow_dispatch:
 
-# Set permissions needed for deployment
-permissions:
-  contents: write
-
-# Define the jobs to run
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      # Check out the repository code
-      - name: Checkout code
-        uses: actions/checkout@v3
+      # 1. Checkout this umbrella repo
+      - uses: actions/checkout@v3
+
+      # 2. Install Antora CLI & site generator
+      - name: Install Antora
+        run: npm install --global @antora/cli @antora/site-generator-default
+
+      # 3. Run Antora build
+      - name: Build site
+        run: npx antora antora-playbook.yml --to-dir=build/site
+
+      # 4. Deploy to GitHub Pages
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          fetch-depth: 0
-
-      # Create the site directory
-      - name: Create site directory
-        run: |
-          mkdir -p build/site
-          rm -rf aas-specifications idta-submodel-templates
-
-      # Copy and modify the index.html file
-      - name: Copy and update index.html
-        run: |
-          cp index.html build/site/index.html
-          sed -i 's|<h1>IDTA AAS Specification Documentation</h1>|<h1>Industrial Digital Twin Documentation</h1>|g' build/site/index.html
-          sed -i 's|<h2 style="color:red;">THIS IS A TEST - SHOULD BE VISIBLE</h2>|<h2 style="color:red;">THIS IS A TEST - UPDATED VERSION - DEPLOYED AT '"$(date)"'</h2>|g' build/site/index.html
-          sed -i 's|href="/aas-specifications/|href="./aas-specifications/|g' build/site/index.html
-          sed -i 's|href="/idta-submodel-templates/|href="./idta-submodel-templates/|g' build/site/index.html
-          echo "Updated index.html content:"
-          cat build/site/index.html
-
-      # Create necessary files for GitHub Pages
-      - name: Create GitHub Pages files
-        run: |
-          touch build/site/.nojekyll
-          echo "industrialdigitaltwin.io" > build/site/CNAME
-          ls -la build/site/
-
-      # Download AAS Specifications
-      - name: Download AAS Specifications site
-        run: |
-          mkdir -p build/site/aas-specifications
-          wget -q --no-check-certificate -r -np -nH --cut-dirs=1 --reject="index.html*" -P aas-specifications/ https://admin-shell-io.github.io/aas-specifications/
-          cp -r aas-specifications/* build/site/aas-specifications/ || echo "No files copied for aas-specifications"
-          echo "Contents of aas-specifications directory:"
-          ls -la aas-specifications/ || echo "No files found"
-
-      # Download Submodel Templates
-      - name: Download Submodel Templates site
-        run: |
-          mkdir -p build/site/idta-submodel-templates
-          wget -q --no-check-certificate -r -np -nH --cut-dirs=1 --reject="index.html*" -P idta-submodel-templates/ https://admin-shell-io.github.io/idta-submodel-templates/
-          cp -r idta-submodel-templates/* build/site/idta-submodel-templates/ || echo "No files copied for idta-submodel-templates"
-          echo "Contents of idta-submodel-templates directory:"
-          ls -la idta-submodel-templates/ || echo "No files found"
-
-      # List all deployed files for debugging
-      - name: List deployed files
-        run: |
-          echo "Contents of build/site root:"
-          ls -la build/site/
-          echo "Contents of aas-specifications directory:"
-          ls -la build/site/aas-specifications/ || echo "Directory empty or not found"
-          echo "Contents of idta-submodel-templates directory:"
-          ls -la build/site/idta-submodel-templates/ || echo "Directory empty or not found"
-
-      # Deploy to GitHub Pages
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: build/site
-          branch: gh-pages
-          clean: true
-          clean-exclude: |
-            .nojekyll
-            CNAME
-          force: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/site
+          publish_branch: gh-pages  # or omit to default to gh-pages
